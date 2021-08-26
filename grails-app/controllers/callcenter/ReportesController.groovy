@@ -373,7 +373,7 @@ class ReportesController {
 										   "ingresos_personales", "rentas", "remesas", "ingreso_familiares", "otros_ingresos", "alimentacion", "servicios_basicos", "transporte", "otros_gastos",
 										   "descripcion_activo", "valor_unitario_bien", "institucion_pasivo", "fecha_emision_pasivo", "valor_cuota_pasivo", "plazo_pasivo", "saldo_pasivo", "telefono_contactado", "mes_gestion", "nombre_vendedor",
 			                               "seguro_desgravamen", "acepta_plan_conmigo","dia_fecha_corte","dia_fecha_pago", "lugar_entrega_tarjeta", "horario_entrega_tarjeta", "fecha_hora_entrega",
-			 								"creadas_nocreadas", "imputable", "detalle_imputable", "fecha_envio_creacion", "status_courier", "ciclo_courier", "telefono_contactado"]
+			 								"creadas_nocreadas", "imputable", "detalle_imputable", "fecha_envio_creacion", "status_courier", "ciclo_courier", "telefono_contactado", "guia_courier"]
 			ExcelUtils.addCells(headersPrincipales, sheetPrincipales, 0, Colour.LIGHT_ORANGE, Alignment.LEFT, VerticalAlignment.CENTRE, cellFont, Border.ALL, BorderLineStyle.HAIR)
 			for (int i = 0; i < principalesList.size(); i++) {
 				String[] campos = new String[headersPrincipales.length]
@@ -501,6 +501,7 @@ class ReportesController {
 				campos[86] = princ.status_courier
 				campos[87] = princ.ciclo_courier
 				campos[88] = princ.telefonoContactado
+				campos[89] = princ.guia_courier
 				ExcelUtils.addCells(campos, sheetPrincipales, i+1, Colour.WHITE, Alignment.LEFT, VerticalAlignment.CENTRE, cellFont2, null, null)
 			}
 			workbook.write()

@@ -183,6 +183,7 @@ class Clientes {
 	String fecha_envio_creacion
 	String status_courier
 	String ciclo_courier
+	String guia_courier
 
 	static constraints = {
 		cupo nullable: true
@@ -355,6 +356,7 @@ class Clientes {
 		fecha_envio_creacion nullable: true
 		status_courier nullable: true
 		ciclo_courier nullable: true
+		guia_courier nullable: true
 	}
 	
 	static mapping = {
