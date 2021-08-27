@@ -566,6 +566,102 @@ class ReportesController {
 		}
 	}
 
+	def bitacoraPlanificacion(){
+		if(params.fechas){
+
+			//Obtenemos los datos
+			Date[] fechas = Util.formatearFechasReporte(params.fechas.toString())
+			ArrayList<SubSubestado> subestados = Subestado.findAllByEnableManagement(true)
+			def nombresBase = params.list("nombreBase")
+			def condiciones = [fechaInicio: fechas[0], fechaFin: fechas[1], subestados: subestados]
+			String sql = "from Clientes a where fechaGestion between :fechaInicio and :fechaFin and subestadoGestion in (:subestados)"
+			def clientesList = Clientes.executeQuery(sql, condiciones)
+			int secuencial = 1
+			//Empezamos a crear y llenar el Excel
+			def webrootDir = servletContext.getRealPath(grailsApplication.config.uploadFolder)
+			File file = new File(webrootDir, "temporal.xls")
+			WorkbookSettings workbookSettings = new WorkbookSettings()
+			workbookSettings.setLocale(new Locale("es", "ES"))
+			workbookSettings.setEncoding("Cp1252")
+			WritableWorkbook workbook = Workbook.createWorkbook(file, workbookSettings)
+			workbook.createSheet("BitacoraAdicionales", 0)
+			WritableFont cellFont = new WritableFont(WritableFont.createFont("Calibri"), 11, WritableFont.BOLD)
+			WritableFont cellFont2 = new WritableFont(WritableFont.createFont("Calibri"), 11)
+			WritableSheet sheet = workbook.getSheet(0)
+			String[] headers = ['CEDULA',	'NOMBRES',	'APELLIDOS',	'NOMBRES Y APELLIDOS',	'PROVINCIA DOMICILIO',
+								'CIUDAD DOMICILIO',	'PARROQUIA DOMICILIO',	'CLL P DOMICILIO',	'NEMERACION',
+								'CALL SEUNDARIA',	'REEERENCIAS',	'DIRECCION COMPLETA DOMICILIO',
+								'PROVINCIA TRABAJO',	'CIUDAD TRABAJO',	'PARROQUIA TRABAJO',
+								'CLL P TRABAJO',	'NEMERACION',	'CALL SEUNDARIA',	'REEERENCIAS',
+								'DIRECCION COMPLETA TRABAJO',	'TELEFONO CONTACTADO',	'TELEFONO REFERENCIA',
+								'TELEFONO 1',	'TELEFONO 2',	'TELEFONO 3',	'TELEFONO 4',	'TELEFONO 5',
+								'TELEFONO 6',	'TELEFONO 7',	'TELEFONO 8',	'TELEFONO 9',	'TELEFONO 10',
+								'ID CLIENTE',	'FECHA GESTION',	'CREADAS NO CREADAS',	'IMPUTABLE',
+								'DETALLE IMPUTABLE',	'FECHA ENVIO CREACION',	'NOMBRE DE LA BASE',	'LOTE',
+								'CODIGO CAMPANIA',	'STATUS COURIER',	'CICLO COURIER',	'CIERRE DE CICLO',
+								'GUIA COURIER',	' CEDULA TITULAR']
+			ExcelUtils.addCells(headers, sheet, 0, Colour.GOLD, Alignment.LEFT, VerticalAlignment.CENTRE, cellFont, Border.ALL, BorderLineStyle.HAIR)
+			for(int i = 0; i < clientesList.size(); i++){
+				String[] campos = new String[headers.length]
+				Clientes cli = clientesList.get(i)
+				campos[0] = cli.identificacion
+				campos[1] = cli.primerNombre + ' ' + cli.segundoNombre
+				campos[2] = cli.apellidoPaterno + ' ' + cli.apellidoMaterno
+				campos[3] = cli.apellidoPaterno + ' ' + cli.apellidoMaterno + ' ' + cli.primerNombre + ' ' + cli.segundoNombre
+				campos[4] = cli.provinciaDomicilio
+				campos[5] = cli.ciudadDomicilio
+				campos[6] = cli.parroquiaDomicilio
+				campos[7] = cli.callePrincipalDomicilio
+				campos[8] = cli.numeracionDomicilio
+				campos[9] = cli.calletransversalDomicilio
+				campos[10] = cli.referenciaDomicilio
+				campos[11] = cli.ciudadDomicilio + ' ' + cli.parroquiaDomicilio + ' ' + cli.callePrincipalDomicilio + ' ' + cli.numeracionDomicilio + ' ' + cli.referenciaDomicilio
+				campos[12] = cli.provinciaTrabajo
+				campos[13] = cli.ciudadTrabajo
+				campos[14] = cli.parroquiaTrabajo
+				campos[15] = cli.callePrincipalTrabajo
+				campos[16] = cli.numeracionTrabajo
+				campos[17] = cli.calletransversalTrabajo
+				campos[18] = cli.referenciaTrabajo
+				campos[19] = cli.ciudadTrabajo + ' ' + cli.parroquiaTrabajo + ' ' + cli.callePrincipalTrabajo + ' ' + cli.numeracionTrabajo + ' ' + cli.referenciaTrabajo
+				campos[20] = cli.telefonoContactado
+				campos[21] = cli.telefonoRefPersonal
+				campos[22] = cli.telefono1
+				campos[23] = cli.telefono2
+				campos[24] = cli.telefono3
+				campos[25] = cli.telefono4
+				campos[26] = cli.telefono5
+				campos[27] = cli.telefono6
+				campos[28] = cli.telefono7
+				campos[29] = cli.telefono8
+				campos[30] = cli.telefono9
+				campos[31] = cli.telefono10
+				campos[32] = cli.id
+				campos[33] = cli.fechaGestion.toString()
+				campos[34] = cli.creadas_nocreadas
+				campos[35] = cli.imputable
+				campos[36] = cli.detalle_imputable
+				campos[37] = cli.fecha_envio_creacion
+				campos[38] = cli.nombreBase
+				campos[39] = "202"
+				campos[40] = cli.codigoCampania
+				campos[41] = cli.status_courier
+				campos[42] = cli.ciclo_courier
+				campos[43] = cli.cierre_ciclo
+				campos[44] = cli.guia_courier
+				campos[45] = cli.identificacion
+				ExcelUtils.addCells(campos, sheet, i+1, Colour.WHITE, Alignment.LEFT, VerticalAlignment.CENTRE, cellFont2, null, null)
+			}
+
+			workbook.write()
+			workbook.close()
+			response.setHeader("Content-disposition", "filename=BitacoraPlanificacion.xls")
+			response.setContentType("application/octet-stream")
+			response.outputStream << file.getBytes()
+			return
+		}
+	}
+
 	/**
 	 * @author Andres Redroban
 	 * Genera archivo para generacion y envio de tarjetas de parte de Courier

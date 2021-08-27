@@ -211,6 +211,18 @@
 						</li>
 					</g:if>
 
+					<g:if test="${Util.checkAccess(session.user.usuario, '/reportes/bitacoraPlanificacion')}">
+						<li class="nav-reports
+						<g:if test="${actionName == "bitacoraPlanificacion"}">
+							nav-active subnav-expanded
+						</g:if>
+						">
+							<a href="${createLink(uri: '/reportes/bitacoraPlanificacion')}">
+								<i class="fa fa-fw fa-table"></i><span class="menu-name">&nbsp;Bitácora Planificación</span>
+							</a>
+						</li>
+					</g:if>
+
 					<g:if test="${Util.checkAccess(session.user.usuario, '/reportes/indicadoresGestion')}">
 						<li class="nav-reports
 						<g:if test="${actionName == "indicadoresGestion"}">
@@ -289,16 +301,14 @@
 				<i class="fa fa-fw fa-arrow-circle-right"></i><span class="menu-name">&nbsp;Gestionar</span>
 			</a>
 		</li>
-		<li
+		<%--<li
 			<g:if test="${controllerName == "gestionNovedades"}">
 				class="nav-active"
 			</g:if>>
 			<a href="${createLink(uri: '/gestionNovedades/index')}">
 				<i class="fa fa-fw fa-arrow-circle-right"></i><span class="menu-name">&nbsp;Gestionar Novedades</span>
 			</a>
-		</li>
-
-		%{--<li class="box-workaround-bug">&nbsp;</li>--}%
+		</li>--%>
 
 
 		<li class="box-workaround-bug">&nbsp;</li>
