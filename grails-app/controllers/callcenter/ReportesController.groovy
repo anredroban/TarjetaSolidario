@@ -610,20 +610,20 @@ class ReportesController {
 				campos[3] = cli.apellidoPaterno + ' ' + cli.apellidoMaterno + ' ' + cli.primerNombre + ' ' + cli.segundoNombre
 				campos[4] = cli.provinciaDomicilio
 				campos[5] = cli.ciudadDomicilio
-				campos[6] = cli.parroquiaDomicilio
+				campos[6] = Parroquia.findByCodigoUbicacion(cli.ubicacionParroquiaDomicilio.toString()).nombre
 				campos[7] = cli.callePrincipalDomicilio
 				campos[8] = cli.numeracionDomicilio
 				campos[9] = cli.calletransversalDomicilio
 				campos[10] = cli.referenciaDomicilio
-				campos[11] = cli.ciudadDomicilio + ' ' + cli.parroquiaDomicilio + ' ' + cli.callePrincipalDomicilio + ' ' + cli.numeracionDomicilio + ' ' + cli.referenciaDomicilio
-				campos[12] = cli.provinciaTrabajo
-				campos[13] = cli.ciudadTrabajo
-				campos[14] = cli.parroquiaTrabajo
+				campos[11] = cli.ciudadDomicilio + ' ' + Parroquia.findByCodigoUbicacion(cli.ubicacionParroquiaDomicilio.toString()).nombre + ' ' + cli.callePrincipalDomicilio + ' ' + cli.numeracionDomicilio + ' ' + cli.referenciaDomicilio
+				campos[12] = Provincia.findById(cli.ubicacionProvinciaTrabajo.toString().toLong()).nombre
+				campos[13] = Ciudad.findByCodigoUbicacion(cli.ubicacionCantonTrabajo.toString()).nombre
+				campos[14] = Parroquia.findByCodigoUbicacion(cli.ubicacionParroquiaTrabajo.toString()).nombre
 				campos[15] = cli.callePrincipalTrabajo
 				campos[16] = cli.numeracionTrabajo
 				campos[17] = cli.calletransversalTrabajo
 				campos[18] = cli.referenciaTrabajo
-				campos[19] = cli.ciudadTrabajo + ' ' + cli.parroquiaTrabajo + ' ' + cli.callePrincipalTrabajo + ' ' + cli.numeracionTrabajo + ' ' + cli.referenciaTrabajo
+				campos[19] = Ciudad.findByCodigoUbicacion(cli.ubicacionCantonTrabajo.toString()).nombre + ' ' + Parroquia.findByCodigoUbicacion(cli.ubicacionParroquiaTrabajo.toString()).nombre + ' ' + cli.callePrincipalTrabajo + ' ' + cli.numeracionTrabajo + ' ' + cli.referenciaTrabajo
 				campos[20] = cli.telefonoContactado
 				campos[21] = cli.telefonoRefPersonal
 				campos[22] = cli.telefono1
@@ -655,7 +655,7 @@ class ReportesController {
 
 			workbook.write()
 			workbook.close()
-			response.setHeader("Content-disposition", "filename=BitacoraPlanificacion.xls")
+			response.setHeader("Content-disposition", "filename=BitacoraPlanificacionSolidario.xls")
 			response.setContentType("application/octet-stream")
 			response.outputStream << file.getBytes()
 			return
